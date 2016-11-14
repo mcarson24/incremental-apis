@@ -23,7 +23,7 @@ class LessonsController extends Controller
 		// No way to signal headers/response codes.
 
 		return Response::json([
-			'data' => $lessons->toArray()
+			'data' => $this->transformCollection($lessons)
 		], 200);
     }
 
@@ -68,7 +68,7 @@ class LessonsController extends Controller
 		}
 
 		return Response::json([
-			'data' => $lesson->toArray()
+			'data' => $this->transform($lesson)
 		], 200);
     }
 
@@ -105,4 +105,20 @@ class LessonsController extends Controller
     {
         //
     }
+
+	private function transformCollection($lessons)
+	{
+		return $lessons->map(function($lesson) {
+			return $this->transform($lesson);
+		});
+	}
+
+	private function transform($lesson)
+	{
+		return [
+			'title'  => $lesson->title,
+			'body'   => $lesson->description,
+			'active' => (boolean) $lesson->some_bool
+		];
+	}
 }

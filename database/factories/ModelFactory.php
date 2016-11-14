@@ -27,5 +27,6 @@ $factory->define(App\Lesson::class, function (Faker\Generator $faker) {
 	return [
 		'title' => $faker->sentence,
 		'description' => $faker->paragraphs(4, true),
+		'some_bool' => $faker->boolean(),
 	];
 });
