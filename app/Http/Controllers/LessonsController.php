@@ -2,13 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Acme\Transformers\LessonTransformer;
 use App\Lesson;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 
 class LessonsController extends Controller
 {
-    /**
+
+	/**
+	 * @var LessonTransformer
+	 */
+	protected $lessonTransformer;
+
+	/**
+	 * LessonsController constructor.
+	 * @param LessonTransformer $lessonTransformer
+	 */
+	public function __construct(LessonTransformer $lessonTransformer)
+	{
+		$this->lessonTransformer = $lessonTransformer;
+	}
+
+	/**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -23,7 +39,7 @@ class LessonsController extends Controller
 		// No way to signal headers/response codes.
 
 		return Response::json([
-			'data' => $this->transformCollection($lessons)
+			'data' => $this->lessonTransformer->transformCollection($lessons)
 		], 200);
     }
 
@@ -68,7 +84,7 @@ class LessonsController extends Controller
 		}
 
 		return Response::json([
-			'data' => $this->transform($lesson)
+			'data' => $this->lessonTransformer->transform($lesson)
 		], 200);
     }
 
@@ -102,23 +118,7 @@ class LessonsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
-        //
-    }
-
-	private function transformCollection($lessons)
 	{
-		return $lessons->map(function($lesson) {
-			return $this->transform($lesson);
-		});
-	}
-
-	private function transform($lesson)
-	{
-		return [
-			'title'  => $lesson->title,
-			'body'   => $lesson->description,
-			'active' => (boolean) $lesson->some_bool
-		];
+		//
 	}
 }
