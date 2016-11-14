@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Lesson;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 
 class LessonsController extends Controller
 {
@@ -14,16 +15,20 @@ class LessonsController extends Controller
      */
     public function index()
     {
-        return Lesson::all(); // really bad practice!!
+        $lessons = Lesson::all(); // really bad practice!!
 		// Because:
 		// Returning everything is bad; we want paginated results.
 		// There is no way to attach meta-data.
 		// Linking db structure to API output.
 		// No way to signal headers/response codes.
+
+		return Response::json([
+			'data' => $lessons->toArray()
+		], 200);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show thR form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -40,7 +45,7 @@ class LessonsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**
@@ -51,7 +56,20 @@ class LessonsController extends Controller
      */
     public function show($id)
     {
-        //
+		$lesson = Lesson::find($id);
+
+		if (!$lesson)
+		{
+			return Response::json([
+				'errors' => [
+					'message' => 'Lesson does not exist.'
+				]
+			], 404);
+		}
+
+		return Response::json([
+			'data' => $lesson->toArray()
+		], 200);
     }
 
     /**
