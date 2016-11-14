@@ -7,7 +7,7 @@ use App\Lesson;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 
-class LessonsController extends Controller
+class LessonsController extends ApiController
 {
 
 	/**
@@ -38,9 +38,9 @@ class LessonsController extends Controller
 		// Linking db structure to API output.
 		// No way to signal headers/response codes.
 
-		return Response::json([
+		return $this->respond([
 			'data' => $this->lessonTransformer->transformCollection($lessons)
-		], 200);
+		]);
     }
 
     /**
@@ -76,16 +76,13 @@ class LessonsController extends Controller
 
 		if (!$lesson)
 		{
-			return Response::json([
-				'errors' => [
-					'message' => 'Lesson does not exist.'
-				]
-			], 404);
+//			return $this->respondNotFound('That lesson does not exist.');
+			return $this->respondInternalError('Internal Server Error.');
 		}
 
-		return Response::json([
+		return $this->respond([
 			'data' => $this->lessonTransformer->transform($lesson)
-		], 200);
+		]);
     }
 
     /**
