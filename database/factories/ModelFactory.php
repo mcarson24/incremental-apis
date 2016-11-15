@@ -31,3 +31,9 @@ $factory->define(App\Lesson::class, function (Faker\Generator $faker) {
 		'some_bool' => $faker->boolean(),
 	];
 });
+
+$factory->define(App\Tag::class, function (Faker\Generator $faker) {
+	return [
+		'name' => $faker->word,
+	];
+});
