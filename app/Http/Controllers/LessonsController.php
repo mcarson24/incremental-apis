@@ -22,6 +22,8 @@ class LessonsController extends ApiController
 	public function __construct(LessonTransformer $lessonTransformer)
 	{
 		$this->lessonTransformer = $lessonTransformer;
+
+		$this->middleware('auth:api', ['only' => 'store']);
 	}
 
 	/**
@@ -61,8 +63,15 @@ class LessonsController extends ApiController
      */
     public function store(Request $request)
     {
+		if (!$request->input('title') || !$request->input('description'))
+		{
+			return $this->returnFailedValidation('Lesson parameters failed validation.');
+		}
 
-    }
+		Lesson::create($request->all());
+
+		return $this->respondCreated('Lesson successfully created.');
+	}
 
     /**
      * Display the specified resource.
@@ -76,8 +85,7 @@ class LessonsController extends ApiController
 
 		if (!$lesson)
 		{
-//			return $this->respondNotFound('That lesson does not exist.');
-			return $this->respondInternalError('Internal Server Error.');
+			return $this->respondNotFound('That lesson does not exist.');
 		}
 
 		return $this->respond([
@@ -118,4 +126,6 @@ class LessonsController extends ApiController
 	{
 		//
 	}
+
+
 }

@@ -5,13 +5,17 @@ namespace App\Http\Controllers;
 
 
 use Illuminate\Support\Facades\Response;
-
+use Illuminate\Http\Response as HttpResponse;
+/**
+ * Class ApiController
+ * @package App\Http\Controllers
+ */
 class ApiController extends Controller {
 
 	/**
 	 * @var int
 	 */
-	protected $statusCode = 200;
+	protected $statusCode = HttpResponse::HTTP_OK;
 
 	/**
 	 * @return mixed
@@ -38,7 +42,7 @@ class ApiController extends Controller {
 	 */
 	public function respondNotFound($message = 'Not Found!')
 	{
-		return $this->setStatusCode(404)->respondWithError($message);
+		return $this->setStatusCode(HttpResponse::HTTP_NOT_FOUND)->respondWithError($message);
 	}
 
 	/**
@@ -47,7 +51,27 @@ class ApiController extends Controller {
 	 */
 	public function respondInternalError($message = 'Internal Error!')
 	{
-		return $this->setStatusCode(500)->respondWithError($message);
+		return $this->setStatusCode(HttpResponse::HTTP_INTERNAL_SERVER_ERROR)->respondWithError($message);
+	}
+
+	/**
+	 * @param $message
+	 * @return mixed
+	 */
+	protected function respondCreated($message)
+	{
+		return $this->setStatusCode(HttpResponse::HTTP_CREATED)->respond([
+			'message' => $message
+		]);
+	}
+
+	/**
+	 * @param $message
+	 * @return mixed
+	 */
+	protected function returnFailedValidation($message)
+	{
+		return $this->setStatusCode(HttpResponse::HTTP_UNPROCESSABLE_ENTITY)->respondWithError($message);
 	}
 
 	/**
