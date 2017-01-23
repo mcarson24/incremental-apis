@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Acme\Transformers\TagTransformer;
-use App\Lesson;
 use App\Tag;
+use App\Lesson;
 use Illuminate\Http\Request;
+use App\Acme\Transformers\TagTransformer;
 
 class TagsController extends ApiController
 {

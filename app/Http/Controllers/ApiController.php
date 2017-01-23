@@ -98,4 +98,22 @@ class ApiController extends Controller {
 		return Response::json($data, $this->getStatusCode(), $headers);
 	}
 
+    /**
+     * @param $lessons
+     * @return mixed
+     */
+    protected function respondWithPagination($lessons, $data)
+    {
+        $data = array_merge($data, [
+            'paginator' => [
+                'total' => $lessons->total(),
+                'current_page' => $lessons->currentPage(),
+                'total_pages' => ceil($lessons->total() / $lessons->perPage()),
+                'limit' => $lessons->perPage()
+            ]
+        ]);
+
+        return $this->respond($data);
+    }
+
 }

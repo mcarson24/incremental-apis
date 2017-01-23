@@ -31,18 +31,24 @@ class LessonsController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $lessons = Lesson::all(); // really bad practice!!
+        $limit = $request->input('limit') ?: 3;
+
+        $limit = ($limit > 25) ? 25 : $limit;
+
+        $lessons = Lesson::paginate($limit); // really bad practice!!
+
+//        dd(get_class_methods($lessons));
 		// Because:
 		// Returning everything is bad; we want paginated results.
 		// There is no way to attach meta-data.
 		// Linking db structure to API output.
 		// No way to signal headers/response codes.
 
-		return $this->respond([
-			'data' => $this->lessonTransformer->transformCollection($lessons)
-		]);
+        return $this->respondWithPagination($lessons, [
+            'data' => $this->lessonTransformer->transformCollection($lessons)
+        ]);
     }
 
     /**

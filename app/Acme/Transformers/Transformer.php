@@ -14,7 +14,7 @@ abstract class Transformer {
 	 * @param $items
 	 * @return mixed
 	 */
-	public function transformCollection(Collection $items)
+	public function transformCollection($items)
 	{
 		return $items->map(function($item) {
 			return $this->transform($item);

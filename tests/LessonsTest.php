@@ -35,6 +35,26 @@ class LessonsTest extends ApiTester
 	   $this->assertResponseStatus(404);
    }
 
+   /** @test */
+   public function it_creates_a_new_lesson_given_valid_parameters()
+   {
+       $user = factory(App\User::class)->create();
+
+       $this->json('POST', "api/v1/lessons/?api_token={$user->api_token}", factory(App\Lesson::class)->create()->toArray());
+
+       $this->assertResponseStatus(201);
+   }
+
+   /** @test */
+   public function it_throws_a_422_if_a_new_lesson_request_fails_validation()
+    {
+        $user = factory(App\User::class)->create();
+
+        $this->json('POST', "api/v1/lessons/?api_token={$user->api_token}");
+
+        $this->assertResponseStatus(422);
+    }
+
 	private function makeLesson($lessonFields = [])
 	{
 		if ($this->times == 1)
